@@ -1,0 +1,13 @@
+# flyscreen 运行依赖
+# Python 3.10+
+numpy>=1.24
+pyarrow>=14.0
+pygame>=2.5
+mujoco>=3.1
+pillow>=10.0
+numba>=0.59        # 可选：LIF 神经仿真加速（当前版本还没用到，留给下一步）
+
+# 视频读写走 ffmpeg 可执行文件，不在这里装。
+# 如果系统没有 ffmpeg，可以：
+#   Windows:  winget install Gyan.FFmpeg
+#   或者:     pip install imageio-ffmpeg   （会自带一个 ffmpeg 二进制）
