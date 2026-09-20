@@ -2,12 +2,20 @@ __pycache__/
 *.pyc
 MUJOCO_LOG.TXT
 
-# 数据 —— 都能用脚本重新下 / 重新生成，不进版本库
-data/raw/
-data/cache/
-data/assets/
-data/uploads/
-data/logs/
+# 数据 —— 都能用脚本重新下 / 重新生成，不进版本库。
+# 这里写 /* 而不是整个目录名：目录骨架（.gitkeep）能入库，clone 下来就能看到
+# README 里描述的那套结构；但里面的实际内容（含 1.0 GB 的连接组权重）仍然排除。
+data/raw/*
+!data/raw/.gitkeep
+data/cache/*
+!data/cache/.gitkeep
+data/assets/*
+!data/assets/.gitkeep
+data/uploads/*
+!data/uploads/.gitkeep
+data/logs/*
+!data/logs/.gitkeep
 
 # 成片
-out/
+out/*
+!out/.gitkeep

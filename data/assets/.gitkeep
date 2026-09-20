@@ -1,0 +1,3 @@
+flybody 果蝇身体模型（MJCF + 92 个网格，约 137 MB）。
+用 `python scripts/fetch_flybody.py` 下载，`python scripts/repair_flybody.py` 校验补下。
+内容不进版本库。

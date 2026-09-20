@@ -1,0 +1,3 @@
+原始连接组表（约 1.06 GB，MaleCNS v1.0）。
+用 `python -m flyscreen.data.fetch` 从 Janelia 公开云盘下载。
+内容不进版本库（单文件超 1 GB，超过 GitHub 100 MB 上限）。

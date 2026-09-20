@@ -1,0 +1,3 @@
+加工后的缓存：neurons.npz（神经元表）+ graph.npz（CSR 连接图）。
+用 `python -m flyscreen.data.prepare` 和 `python -m flyscreen.data.prepare_graph` 生成。
+内容不进版本库。
