@@ -212,6 +212,7 @@ def run(a: argparse.Namespace) -> int:
     # ---------------- 身体 ----------------
     body = None
     body_driver = None
+    prev_drive = None            # 上一帧驱动数组，用于画面变化门控
     if cfg.body.enabled:
         from flyscreen.body import BodyDriver, FlyBody, find_model_xml
 
@@ -274,6 +275,10 @@ def run(a: argparse.Namespace) -> int:
                 st.step_once = False
 
             drive = canvas.drive_from_frame(frame)
+            # 画面变化量：与上一帧驱动数组的平均绝对差（静止画面精确为 0）
+            motion = (0.0 if prev_drive is None
+                      else float(np.abs(drive - prev_drive).mean()))
+            prev_drive = drive
             if brain is not None:
                 brain.set_drive(drive)
                 total_spikes = 0
@@ -293,7 +298,7 @@ def run(a: argparse.Namespace) -> int:
 
             body_img = None
             if body is not None:
-                part_drive = body_driver.update(act, dt)
+                part_drive = body_driver.update(act, dt, motion)
                 body.step(part_drive, dt)
                 body_img = body.render(cfg.body.width, cfg.body.height)
                 _last_body = body_img

@@ -94,6 +94,8 @@ class Session:
         self._recompute_ticks()
         self._t_last = time.time()
         self._fps = 0.0
+        # 上一帧的神经元驱动数组，用来算"画面变化量"（门控用）
+        self._prev_drive: np.ndarray | None = None
 
         if video:
             self.open_video(video)
@@ -182,6 +184,7 @@ class Session:
         print(f"[web] 打开视频：{Path(path).name}  "
               f"{src.info.width}x{src.info.height}  {src.info.duration:.1f}s")
         self.canvas.reset()
+        self._prev_drive = None          # 换片源，门控从"没有上一帧"重新开始
         if self.brain is not None:
             self.brain.reset()
         self.frame_i = 0
@@ -311,6 +314,11 @@ class Session:
         self.frame_i += 1
 
         drive = self.canvas.drive_from_frame(frame)
+        # 画面变化量 = 与上一帧驱动数组的平均绝对差。画面没变（静止视频、重复帧）
+        # 精确得到 0，门控会把身体整个冻住 —— 这是"静止图不抽"的实现点。
+        motion = (0.0 if self._prev_drive is None
+                  else float(np.abs(drive - self._prev_drive).mean()))
+        self._prev_drive = drive
         if self.brain is not None:
             self.brain.set_drive(drive)
             spk = 0
@@ -329,7 +337,7 @@ class Session:
         bimg = None
         body_txt = ""
         if self.body is not None:
-            part = self.body_driver.update(act, 1.0 / self.cfg.fps)
+            part = self.body_driver.update(act, 1.0 / self.cfg.fps, motion)
             self.body.step(part, 1.0 / self.cfg.fps)
             bimg = self.body.render(self.cfg.body.width, self.cfg.body.height)
             up = self.body.uprightness()
